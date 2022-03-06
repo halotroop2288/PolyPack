@@ -3,11 +3,12 @@ package com.halotroop.polypack;
 import com.sun.net.httpserver.HttpServer;
 import eu.pb4.polymer.api.resourcepack.PolymerRPUtils;
 import net.minecraft.server.MinecraftServer;
-import org.apache.commons.codec.digest.DigestUtils;
 
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.math.BigInteger;
 import java.net.InetSocketAddress;
+import java.security.MessageDigest;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.concurrent.ExecutorService;
@@ -53,7 +54,19 @@ public class PolyPackHttpServer {
 
 			LOGGER.info("Polymer resource pack host started at {}", packIp);
 
-			String hash = DigestUtils.sha1Hex(new FileInputStream(POLYMER_PACK_FILE.toFile()).readAllBytes());
+			var value = new FileInputStream(POLYMER_PACK_FILE.toFile()).readAllBytes();
+
+			String hash = "";
+
+			try {
+				MessageDigest digest = MessageDigest.getInstance("SHA-1");
+				digest.reset();
+				digest.update(value);
+				hash = String.format("%040x", new BigInteger(1, digest.digest()));
+			} catch (Exception e){
+				e.printStackTrace();
+			}
+
 			server.setResourcePack(packIp, hash);
 		} catch (IOException e) {
 			LOGGER.error("Failed to start the resource pack server!", e);
