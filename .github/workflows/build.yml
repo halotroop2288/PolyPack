@@ -21,8 +21,8 @@ jobs:
           java-version: '17'
       - name: Build with Gradle
         uses: gradle/gradle-build-action@v2
-      - name: Build JAR Artifacts
-        run: gradlew jar
+        with:
+          arguments: jar
       - name: Upload Artifacts
         uses: actions/upload-artifact@v3
         with:
