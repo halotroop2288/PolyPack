@@ -1,0 +1,30 @@
+{
+  "schemaVersion": 1,
+  "id": "polypack",
+  "version": "${version}",
+
+  "name": "PolyPack",
+  "description": "Automatically build, host and require your server resource pack!",
+  "authors": [
+    "aws404",
+    "Mg138",
+    "halotroop2288"
+  ],
+  "contact": {
+    "sources": "https://github.com/halotroop2288/polypack",
+    "issues": "https://github.com/halotroop2288/polypack/issues"
+  },
+  "license": "MIT",
+  "environment": "server",
+  "entrypoints": {
+    "server": [
+      "com.halotroop.polypack.PolyPack"
+    ]
+  },
+  "depends": {
+    "fabricloader": ">=0.13.3",
+    "polymer": ">=0.2.0-+",
+    "fabric": "*",
+    "java": ">=17"
+  }
+}

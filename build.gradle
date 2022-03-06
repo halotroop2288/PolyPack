@@ -1,0 +1,65 @@
+//file:noinspection GroovyAssignabilityCheck
+import java.text.SimpleDateFormat
+
+plugins {
+	id 'fabric-loom' version '0.10-SNAPSHOT'
+	id 'maven-publish'
+}
+
+version = buildTime()
+group = project.maven_group
+
+static def buildTime() {
+	def df = new SimpleDateFormat("yyyy.MMdd.HHmm")
+	df.setTimeZone(TimeZone.getTimeZone("UTC"))
+	return df.format(new Date())
+}
+
+repositories {
+	maven { url 'https://maven.nucleoid.xyz' }
+}
+
+dependencies {
+	minecraft("com.mojang:minecraft:" + project.minecraft_version)
+	mappings("net.fabricmc:yarn:${project.yarn_mappings}:v2")
+	modImplementation("net.fabricmc:fabric-loader:" + project.loader_version)
+	modApi("net.fabricmc.fabric-api:fabric-api:" + project.api_version)
+	modApi("eu.pb4:polymer:" + project.polymer_version)
+}
+
+processResources {
+	inputs.property "version", project.version
+
+	filesMatching("fabric.mod.json") {
+		expand "version": project.version
+	}
+}
+
+tasks.withType(JavaCompile).configureEach {
+	it.options.release.set 17
+}
+
+java {
+	withSourcesJar()
+}
+
+jar {
+	from("LICENSE") {
+		rename { "${it}_${project.archivesBaseName}" }
+	}
+}
+
+publishing {
+	publications {
+		mavenJava(MavenPublication) {
+			from components.java
+		}
+	}
+
+	repositories {
+		maven {
+			name 'halotroop2288'
+			url 'https://repo.blucobalt.dev/repository/maven-halotroop/'
+		}
+	}
+}
